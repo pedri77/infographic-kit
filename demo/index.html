@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>infographic-kit — 20 Template Gallery</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: #f1f5f9;
+      color: #1e293b;
+      padding: 24px;
+    }
+    h1 { font-size: 28px; margin-bottom: 8px; }
+    .subtitle { color: #64748b; margin-bottom: 24px; font-size: 14px; }
+    .subtitle a { color: #3b82f6; text-decoration: none; }
+    .controls {
+      display: flex; gap: 12px; margin-bottom: 24px; align-items: center; flex-wrap: wrap;
+    }
+    .controls label { font-size: 13px; font-weight: 600; color: #475569; }
+    .controls select {
+      padding: 6px 12px; border-radius: 6px; border: 1px solid #cbd5e1;
+      font-size: 13px; background: white;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(480px, 1fr));
+      gap: 20px;
+    }
+    .card {
+      background: white; border-radius: 12px; padding: 16px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08); overflow: hidden;
+    }
+    .card-header {
+      display: flex; justify-content: space-between; align-items: center;
+      margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid #f1f5f9;
+    }
+    .card-title { font-size: 14px; font-weight: 600; color: #334155; }
+    .card-alias {
+      font-size: 11px; font-family: monospace; color: #94a3b8;
+      background: #f8fafc; padding: 2px 8px; border-radius: 4px;
+    }
+    .card-body { min-height: 300px; }
+    .streaming-demo {
+      background: white; border-radius: 12px; padding: 20px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08); margin-bottom: 24px;
+    }
+    .streaming-demo h2 { font-size: 18px; margin-bottom: 12px; }
+    .streaming-demo textarea {
+      width: 100%; height: 160px; font-family: monospace; font-size: 13px;
+      padding: 12px; border: 1px solid #e2e8f0; border-radius: 8px;
+      resize: vertical; margin-bottom: 12px;
+    }
+    .streaming-demo button {
+      padding: 8px 20px; background: #3b82f6; color: white; border: none;
+      border-radius: 6px; cursor: pointer; font-size: 13px; font-weight: 600;
+    }
+    .streaming-demo button:hover { background: #2563eb; }
+    #streaming-output { min-height: 300px; margin-top: 16px; }
+  </style>
+</head>
+<body>
+  <h1>infographic-kit</h1>
+  <p class="subtitle">
+    20 curated templates over
+    <a href="https://github.com/antvis/Infographic" target="_blank">@antv/infographic</a>
+    (MIT) — streaming-ready, LLM-friendly
+  </p>
+
+  <div class="controls">
+    <label>Theme:</label>
+    <select id="theme-select">
+      <option value="corporate" selected>Corporate</option>
+      <option value="mwi-dark">MWI Dark</option>
+      <option value="iacademy-warm">IAcademy Warm</option>
+      <option value="trigr-slate">Trigr Slate</option>
+      <option value="cyber-red">Cyber Red</option>
+    </select>
+  </div>
+
+  <!-- Streaming demo -->
+  <div class="streaming-demo">
+    <h2>Streaming / Live Syntax</h2>
+    <textarea id="syntax-input">infographic process-steps
+theme corporate
+data
+  title Product Launch Process
+  lists
+    - label Research
+      desc Market analysis and user interviews
+    - label Design
+      desc Wireframes and prototypes
+    - label Build
+      desc Development and testing
+    - label Launch
+      desc Deploy and monitor</textarea>
+    <button id="render-btn">Render</button>
+    <div id="streaming-output"></div>
+  </div>
+
+  <!-- Template gallery -->
+  <div class="grid" id="gallery"></div>
+
+  <script type="module">
+    import { Infographic } from '@antv/infographic';
+
+    // Template definitions with sample data
+    const TEMPLATES = [
+      {
+        alias: 'list-horizontal',
+        antv: 'list-row-simple-horizontal-arrow',
+        data: `infographic list-row-simple-horizontal-arrow\ndata\n  title Key Metrics\n  lists\n    - label Revenue\n      desc $2.4M ARR\n    - label Users\n      desc 12,500 active\n    - label Growth\n      desc +34% MoM`,
+      },
+      {
+        alias: 'list-vertical',
+        antv: 'list-column-simple-vertical-arrow',
+        data: `infographic list-column-simple-vertical-arrow\ndata\n  title Security Layers\n  lists\n    - label Perimeter\n      desc Firewall + WAF\n    - label Network\n      desc Segmentation + IDS\n    - label Endpoint\n      desc EDR + DLP\n    - label Data\n      desc Encryption + RLS`,
+      },
+      {
+        alias: 'list-grid',
+        antv: 'list-grid-compact-card',
+        data: `infographic list-grid-compact-card\ndata\n  title Service Portfolio\n  lists\n    - label SOC 24/7\n      desc Threat monitoring\n    - label GRC\n      desc Compliance management\n    - label CTI\n      desc Intelligence feeds\n    - label Audit\n      desc Security assessments`,
+      },
+      {
+        alias: 'list-icons',
+        antv: 'list-grid-simple',
+        data: `infographic list-grid-simple\ndata\n  title Tech Stack\n  lists\n    - label FastAPI\n      desc Backend framework\n    - label Next.js\n      desc Frontend\n    - label Supabase\n      desc Database + Auth\n    - label Hetzner\n      desc Infrastructure`,
+      },
+      {
+        alias: 'list-cards',
+        antv: 'list-grid-badge-card',
+        data: `infographic list-grid-badge-card\ndata\n  title Team Roles\n  lists\n    - label Analyst\n      desc SOC operations\n    - label Engineer\n      desc Platform development\n    - label Researcher\n      desc Threat intelligence\n    - label Manager\n      desc Client relations`,
+      },
+      {
+        alias: 'timeline-vertical',
+        antv: 'sequence-roadmap-vertical-simple',
+        data: `infographic sequence-roadmap-vertical-simple\ndata\n  title Product Roadmap 2026\n  lists\n    - label Q1\n      desc MVP Launch\n    - label Q2\n      desc First 10 customers\n    - label Q3\n      desc Series A prep\n    - label Q4\n      desc International expansion`,
+      },
+      {
+        alias: 'timeline-horizontal',
+        antv: 'sequence-timeline-simple',
+        data: `infographic sequence-timeline-simple\ndata\n  title Incident Response\n  lists\n    - label Detect\n      desc Alert triggered\n    - label Triage\n      desc Severity assessment\n    - label Contain\n      desc Isolate threat\n    - label Recover\n      desc Restore operations`,
+      },
+      {
+        alias: 'process-steps',
+        antv: 'sequence-steps-simple',
+        data: `infographic sequence-steps-simple\ndata\n  title Onboarding Flow\n  lists\n    - label Sign Up\n      desc Create account\n    - label Configure\n      desc Set preferences\n    - label Connect\n      desc Integrate tools\n    - label Activate\n      desc Start using`,
+      },
+      {
+        alias: 'snake-steps',
+        antv: 'sequence-snake-steps-simple',
+        data: `infographic sequence-snake-steps-simple\ndata\n  title CI/CD Pipeline\n  lists\n    - label Commit\n      desc Push code\n    - label Build\n      desc Compile + test\n    - label Review\n      desc Code review\n    - label Stage\n      desc Pre-production\n    - label Deploy\n      desc Production\n    - label Monitor\n      desc Observability`,
+      },
+      {
+        alias: 'funnel',
+        antv: 'sequence-funnel-simple',
+        data: `infographic sequence-funnel-simple\ndata\n  title Sales Funnel\n  lists\n    - label Awareness\n      desc 10,000 visitors\n    - label Interest\n      desc 2,500 signups\n    - label Evaluation\n      desc 500 trials\n    - label Purchase\n      desc 50 customers`,
+      },
+      {
+        alias: 'mindmap',
+        antv: 'hierarchy-mindmap-right-simple',
+        data: `infographic hierarchy-mindmap-right-simple\ndata\n  title Cybersecurity\n  lists\n    - label Offensive\n      children\n        - label Pentest\n        - label Red Team\n    - label Defensive\n      children\n        - label SOC\n        - label GRC\n    - label Intelligence\n      children\n        - label CTI\n        - label OSINT`,
+      },
+      {
+        alias: 'org-chart',
+        antv: 'hierarchy-tree-vertical-simple',
+        data: `infographic hierarchy-tree-vertical-simple\ndata\n  title Organization\n  lists\n    - label CEO\n      children\n        - label CTO\n          children\n            - label Engineering\n            - label DevOps\n        - label COO\n          children\n            - label Operations\n            - label Support`,
+      },
+      {
+        alias: 'pyramid',
+        antv: 'list-pyramid-rounded-rect-node',
+        data: `infographic list-pyramid-rounded-rect-node\ndata\n  title Security Maturity\n  lists\n    - label Optimized\n      desc Level 5\n    - label Managed\n      desc Level 4\n    - label Defined\n      desc Level 3\n    - label Developing\n      desc Level 2\n    - label Initial\n      desc Level 1`,
+      },
+      {
+        alias: 'pros-cons',
+        antv: 'compare-binary-horizontal-simple-fold',
+        data: `infographic compare-binary-horizontal-simple-fold\ndata\n  title Cloud vs On-Premise\n  lists\n    - label Scalability\n      desc Instant scaling\n    - label Cost\n      desc Pay-as-you-go\n    - label Speed\n      desc Fast deployment\n  lists2\n    - label Control\n      desc Full ownership\n    - label Security\n      desc Data sovereignty\n    - label Compliance\n      desc Easier audits`,
+      },
+      {
+        alias: 'vs-compare',
+        antv: 'compare-binary-horizontal-simple-vs',
+        data: `infographic compare-binary-horizontal-simple-vs\ndata\n  title React vs Vue\n  lists\n    - label Ecosystem\n      desc Massive community\n    - label Performance\n      desc Virtual DOM\n    - label TypeScript\n      desc First-class support\n  lists2\n    - label Simplicity\n      desc Easy learning curve\n    - label Size\n      desc Lighter bundle\n    - label Reactivity\n      desc Built-in system`,
+      },
+      {
+        alias: 'swot',
+        antv: 'compare-swot',
+        data: `infographic compare-swot\ndata\n  title SWOT Analysis\n  lists\n    - label Strengths\n      children\n        - label Strong team\n        - label Unique tech\n    - label Weaknesses\n      children\n        - label Limited funding\n        - label Small market share\n    - label Opportunities\n      children\n        - label NIS2 regulation\n        - label Growing demand\n    - label Threats\n      children\n        - label Big competitors\n        - label Talent shortage`,
+      },
+      {
+        alias: 'pie-chart',
+        antv: 'chart-pie-simple',
+        data: `infographic chart-pie-simple\ndata\n  title Revenue Breakdown\n  lists\n    - label SaaS\n      value 45\n    - label Services\n      value 30\n    - label Training\n      value 15\n    - label Other\n      value 10`,
+      },
+      {
+        alias: 'bar-chart',
+        antv: 'chart-bar-plain-text',
+        data: `infographic chart-bar-plain-text\ndata\n  title Monthly Active Users\n  lists\n    - label Jan\n      value 1200\n    - label Feb\n      value 1800\n    - label Mar\n      value 2400\n    - label Apr\n      value 3100`,
+      },
+      {
+        alias: 'flow-diagram',
+        antv: 'relation-dagre-flow-simple',
+        data: `infographic relation-dagre-flow-simple\ndata\n  title Alert Processing\n  lists\n    - label Ingest\n    - label Parse\n    - label Correlate\n    - label Alert\n  relations\n    Ingest --> Parse\n    Parse --> Correlate\n    Correlate --> Alert`,
+      },
+      {
+        alias: 'network',
+        antv: 'relation-network-icon-badge',
+        data: `infographic relation-network-icon-badge\ndata\n  title System Architecture\n  lists\n    - label API Gateway\n    - label Auth Service\n    - label Core API\n    - label Database\n  relations\n    API Gateway --> Auth Service\n    API Gateway --> Core API\n    Core API --> Database`,
+      },
+    ];
+
+    let currentTheme = 'corporate';
+
+    function getThemeConfig(theme) {
+      const themes = {
+        'corporate': { colorPrimary: '#1a56db', colorBg: '#ffffff' },
+        'mwi-dark': { colorPrimary: '#10b981', colorBg: '#0f172a', isDarkMode: true },
+        'iacademy-warm': { colorPrimary: '#f59e0b', colorBg: '#fffbeb' },
+        'trigr-slate': { colorPrimary: '#6366f1', colorBg: '#f8fafc' },
+        'cyber-red': { colorPrimary: '#ef4444', colorBg: '#0c0a09', isDarkMode: true },
+      };
+      return themes[theme] || themes['corporate'];
+    }
+
+    function renderAll() {
+      const gallery = document.getElementById('gallery');
+      gallery.innerHTML = '';
+      const themeConfig = getThemeConfig(currentTheme);
+
+      TEMPLATES.forEach((tpl) => {
+        const card = document.createElement('div');
+        card.className = 'card';
+        card.innerHTML = `
+          <div class="card-header">
+            <span class="card-title">${tpl.alias}</span>
+            <span class="card-alias">${tpl.antv}</span>
+          </div>
+          <div class="card-body" id="tpl-${tpl.alias}"></div>
+        `;
+        gallery.appendChild(card);
+
+        try {
+          const ig = new Infographic({
+            container: card.querySelector('.card-body'),
+            width: '100%',
+            height: '100%',
+            themeConfig,
+          });
+          ig.render(tpl.data);
+        } catch (e) {
+          card.querySelector('.card-body').innerHTML =
+            `<div style="color:#ef4444;padding:20px;font-size:13px;">Error: ${e.message}</div>`;
+        }
+      });
+    }
+
+    // Theme switcher
+    document.getElementById('theme-select').addEventListener('change', (e) => {
+      currentTheme = e.target.value;
+      renderAll();
+      // Re-render streaming demo too
+      const syntax = document.getElementById('syntax-input').value;
+      if (syntax.trim()) renderStreaming(syntax);
+    });
+
+    // Streaming demo
+    function renderStreaming(syntax) {
+      const output = document.getElementById('streaming-output');
+      output.innerHTML = '';
+      const themeConfig = getThemeConfig(currentTheme);
+      try {
+        const ig = new Infographic({
+          container: output,
+          width: '100%',
+          height: '100%',
+          themeConfig,
+        });
+        ig.render(syntax);
+      } catch (e) {
+        output.innerHTML = `<div style="color:#ef4444;padding:20px;">Error: ${e.message}</div>`;
+      }
+    }
+
+    document.getElementById('render-btn').addEventListener('click', () => {
+      renderStreaming(document.getElementById('syntax-input').value);
+    });
+
+    // Also render on textarea input (live)
+    document.getElementById('syntax-input').addEventListener('input', (e) => {
+      renderStreaming(e.target.value);
+    });
+
+    // Initial render
+    renderAll();
+    renderStreaming(document.getElementById('syntax-input').value);
+  </script>
+</body>
+</html>

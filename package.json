@@ -1,0 +1,41 @@
+{
+  "name": "infographic-kit",
+  "version": "0.1.0",
+  "description": "Infographic generation wrapper over @antv/infographic — 20 curated templates, portfolio themes, LLM-friendly",
+  "type": "module",
+  "main": "./dist/infographic-kit.umd.js",
+  "module": "./dist/infographic-kit.es.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/infographic-kit.es.js",
+      "require": "./dist/infographic-kit.umd.js"
+    }
+  },
+  "files": [
+    "dist",
+    "src"
+  ],
+  "scripts": {
+    "dev": "vite demo",
+    "build": "vite build && tsc --emitDeclarationOnly",
+    "preview": "vite preview"
+  },
+  "keywords": [
+    "infographic",
+    "visualization",
+    "svg",
+    "ai",
+    "llm"
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "@antv/infographic": "0.2.19"
+  },
+  "devDependencies": {
+    "typescript": "^5.9.2",
+    "vite": "^7.1.5",
+    "vite-plugin-dts": "^4.5.4"
+  }
+}
